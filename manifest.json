@@ -1,0 +1,27 @@
+{
+  "name": "HAR Recorder",
+  "description": "Records network request and generates HAR file.",
+  "version": "1.0",
+  "manifest_version": 3,
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "action": {
+    "default_icon": {              // optional
+      "16": "icons8-record-16.png",   // optional
+      "48": "icons8-record-48.png",
+      "128": "icons8-record-100.png"
+     }
+  },
+  "permissions": [
+    "tabs",
+    "unlimitedStorage",
+    "storage",
+    "debugger",
+    "scripting"
+  ],
+  "host_permissions": [
+    "https://*/*"
+  ]
+}
