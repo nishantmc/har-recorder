@@ -8,8 +8,8 @@
     "type": "module"
   },
   "action": {
-    "default_icon": {              // optional
-      "16": "icons8-record-16.png",   // optional
+    "default_icon": {
+      "16": "icons8-record-16.png",
       "48": "icons8-record-48.png",
       "128": "icons8-record-100.png"
      }
@@ -20,8 +20,5 @@
     "storage",
     "debugger",
     "scripting"
-  ],
-  "host_permissions": [
-    "https://*/*"
   ]
 }
