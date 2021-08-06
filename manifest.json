@@ -1,7 +1,7 @@
 {
   "name": "HAR Recorder",
   "description": "Records network request and generates HAR file.",
-  "version": "1.0",
+  "version": "1.1",
   "manifest_version": 3,
   "background": {
     "service_worker": "background.js",
@@ -20,5 +20,8 @@
     "storage",
     "debugger",
     "scripting"
+  ],
+  "host_permissions": [
+    "https://*/*"
   ]
 }

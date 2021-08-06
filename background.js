@@ -10,7 +10,7 @@ import { HARBuilder } from './har.js';
 chrome.tabs.onActivated.addListener(function(activeInfo) {
   chrome.storage.local.get(['tabs'], function(result) {
     const tabs = result.tabs;
-    if(tabs[activeInfo.tabId]) {
+    if(tabs?.[activeInfo.tabId]) {
       chrome.action.setIcon({ path: "player_record.png" });
       chrome.action.setTitle({tabId: activeInfo.tabId, title: 'Click to stop record network requests.'});
     } else {
@@ -25,8 +25,9 @@ chrome.tabs.onActivated.addListener(function(activeInfo) {
 //Handle action clicked
 chrome.action.onClicked.addListener(function(tab) {
   chrome.storage.local.get(['tabs'], async function(result) {
-    const newTabs = result.tabs;
-    if(newTabs[tab.id]) {
+    let newTabs = result.tabs;
+
+    if(newTabs?.[tab.id]) {
       chrome.debugger.detach({tabId:tab.id});
       chrome.action.setIcon({ path: "icons8-record-16.png" });
       chrome.action.setTitle({tabId: tab.id, title: 'Click to start record network requests.'});
@@ -37,11 +38,15 @@ chrome.action.onClicked.addListener(function(tab) {
         args: [encodeURIComponent(JSON.stringify(new HARBuilder().create([tabs[tab.id]]))), `${fileName}.har`],
         function: generateHARFile,
       });
-
-      delete tabs[tab.id];
-      chrome.storage.local.set({ tabs });
+      newTabs[tab.id] = undefined;
+      await writeTabObject(newTabs);
       console.log(`Action clicked: Tab ${tab.id} now unregistered.`);
     } else {
+
+      //initialize the prop
+      if(!newTabs) {
+        newTabs = {};
+      }
 
       let stats = new Stats();
       tabs[tab.id] = stats;
