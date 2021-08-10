@@ -31,13 +31,17 @@ chrome.action.onClicked.addListener(function(tab) {
       chrome.debugger.detach({tabId:tab.id});
       chrome.action.setIcon({ path: "icons8-record-16.png" });
       chrome.action.setTitle({tabId: tab.id, title: 'Click to start record network requests.'});
-      const fileName = new URL(tab.url).host;
-      chrome.scripting.executeScript(
-      {
-        target: {tabId: tab.id},
-        args: [encodeURIComponent(JSON.stringify(new HARBuilder().create([tabs[tab.id]]))), `${fileName}.har`],
-        function: generateHARFile,
-      });
+      try{
+        const fileName = new URL(tab.url).host;
+        chrome.scripting.executeScript(
+        {
+          target: {tabId: tab.id},
+          args: [encodeURIComponent(JSON.stringify(new HARBuilder().create([tabs[tab.id]]))), `${fileName}.har`],
+          function: generateHARFile,
+        });
+      } catch(error) {
+        console.log(error);
+      }
       newTabs[tab.id] = undefined;
       await writeTabObject(newTabs);
       console.log(`Action clicked: Tab ${tab.id} now unregistered.`);

@@ -348,11 +348,11 @@ export class HARBuilder {
 
  parseQueryString(requestUrl) {
   const url = new URL(requestUrl);
-  const pairs = [];
+  let map = {};
   for(const pair of url.searchParams.entries()) {
-     pairs.push({[pair[0]]: pair[1]});
+     map = {...map,...{[pair[0]]: pair[1]}};
   }
-  return pairs;
+  return this.zipNameValue(map);
 }
 
  parsePostData(request, headers) {
