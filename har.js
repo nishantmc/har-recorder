@@ -1,14 +1,14 @@
 export class HARBuilder {
   constructor() {}
 
- create(pages) {
+ create(pages, domain) {
     // HAR template
     const har = {
         log: {
             version: '1.2',
             creator: {
                 name: 'HAR Recorder',
-                version: 1,
+                version: '1.5',
                 comment: 'Records network request and generates HAR file.'
             },
             pages: [],
@@ -18,22 +18,22 @@ export class HARBuilder {
     // fill the HAR template each page info
     for (const [pageIndex, stats] of pages.entries()) {
         const pageId = `page_${pageIndex + 1}_${String(Math.random()).slice(2)}`;
-        const log = this.parsePage(String(pageId), stats);
+        const log = this.parsePage(String(pageId), stats, domain);
         har.log.pages.push(log.page);
         har.log.entries.push(...log.entries);
     }
     return har;
 }
 
- parsePage(pageId, stats) {
+ parsePage(pageId, stats, domain) {
     // page load started at
     //const firstRequest = stats.entries.get(stats.firstRequestId).requestParams;
     //const wallTimeMs = firstRequest.wallTime * 1000;
     //const startedDateTime = new Date(wallTimeMs).toISOString();
-    const startedDateTime = 0;
     // page timings
     //const onContentLoad = stats.domContentEventFiredMs - stats.firstRequestMs;
     //const onLoad = stats.loadEventFiredMs - stats.firstRequestMs;
+    let startedDateTime = new Date().toISOString();
 
     const onContentLoad = 0;
     const onLoad = 0;
@@ -41,11 +41,14 @@ export class HARBuilder {
     const entries = [...Object.values(stats.entries)]
         .map((entry) => this.parseEntry(pageId, entry))
         .filter((entry) => entry);
+    if(entries?.[0]?.startedDateTime) {
+        startedDateTime = entries?.[0]?.startedDateTime;
+    }
     // outcome
     return {
         page: {
             id: pageId,
-            title: stats.url,
+            title: domain,
             startedDateTime,
             pageTimings: {
                 onContentLoad,

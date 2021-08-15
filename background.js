@@ -36,7 +36,7 @@ chrome.action.onClicked.addListener(function(tab) {
         chrome.scripting.executeScript(
         {
           target: {tabId: tab.id},
-          args: [encodeURIComponent(JSON.stringify(new HARBuilder().create([tabs[tab.id]]))), `${fileName}.har`],
+          args: [encodeURIComponent(JSON.stringify(new HARBuilder().create([tabs[tab.id]], fileName))), `${fileName}.har`],
           function: generateHARFile,
         });
       } catch(error) {

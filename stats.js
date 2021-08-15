@@ -151,7 +151,7 @@ export class StatsBuilder {
 
  static _Network_webSocketHandshakeResponseReceived(stats, params) {
      // reuse the general handler
-     stats._Network_responseReceived(stats, params);
+     StatsBuilder._Network_responseReceived(stats, params);
  }
 
  static _Network_webSocketClosed(stats, params) {
